@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>dashboard - Perpustakaan Pribadi</title>
-  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 
 </head>
 
@@ -14,20 +14,17 @@
   session_start();
   if (!isset($_SESSION['username'])) {
     header("location:index.php");
-    exit();
+    exit;
   }
+  include_once 'headerFooter/header.php';
   ?>
   <div class="dashboard">
     <h1>Selamat datang, <?php echo $_SESSION['username']; ?>!</h1>
-    <nav>
-      <ul>
-        <li><a href="buku.php">Koleksi Buku Saya</a></li>
-        <li><a href="logout.php">Logout</a></li>
-      </ul>
-    </nav>
   </div>
   <?php
+  include_once 'headerFooter/footer.php';
   ?>
+
 </body>
 
 </html>
