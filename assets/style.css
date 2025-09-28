@@ -11,7 +11,7 @@
   --text-light: rgba(255, 255, 255, 0.9);
   --text-muted: rgba(255, 255, 255, 0.75);
   --shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  --background-fallback: linear-gradient(45deg, #17313e, #628fa7);
+  --background-fallback: #17313e;
 }
 
 * {
