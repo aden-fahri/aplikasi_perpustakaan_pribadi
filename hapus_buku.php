@@ -34,6 +34,11 @@ if (!empty($buku['gambar']) && file_exists($buku['gambar'])) {
   unlink($buku['gambar']);
 }
 
+// Hapus file PDF jika ada
+if (!empty($buku['file_pdf']) && file_exists($buku['file_pdf'])) {
+  unlink($buku['file_pdf']);
+}
+
 // hapus data dari database
 mysqli_query($conn, "DELETE FROM buku WHERE id = $id_buku AND user_id = $user_id");
 

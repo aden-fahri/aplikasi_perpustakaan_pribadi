@@ -11,7 +11,8 @@
   --text-light: rgba(255, 255, 255, 0.9);
   --text-muted: rgba(255, 255, 255, 0.75);
   --shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  --background-fallback: #17313e;
+  --background-fallback: linear-gradient(45deg, #17313e, #50589c);
+  --background-ss: #17313e;
 }
 
 * {
@@ -327,6 +328,11 @@ textarea.form_login {
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.book-cover:hover {
+  opacity: 0.8;
 }
 
 .book-card h3 {

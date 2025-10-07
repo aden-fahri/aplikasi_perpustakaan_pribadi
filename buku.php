@@ -50,7 +50,14 @@
         while ($row = mysqli_fetch_assoc($result)) {
           echo "<div class='book-card'>";
           $gambar = (!empty($row['gambar']) && file_exists($row['gambar'])) ? $row['gambar'] : 'assets/IMAGE NOT FOUND.png';
-          echo "<img src='$gambar' alt='Sampul Buku' class='book-cover'>";
+          // Jika ada file PDF, gambar menjadi tautan ke PDF
+          if (!empty($row['file_pdf']) && file_exists($row['file_pdf'])) {
+            echo "<a href='{$row['file_pdf']}' target='_blank'>";
+            echo "<img src='$gambar' alt='Sampul Buku' class='book-cover'>";
+            echo "</a>";
+          } else {
+            echo "<img src='$gambar' alt='Sampul Buku' class='book-cover'>";
+          }
           echo "<h3>" . htmlspecialchars($row['judul']) . "</h3>";
           echo "<p>Penulis: " . htmlspecialchars($row['penulis']) . "</p>";
           echo "<p>Penerbit: " . htmlspecialchars($row['penerbit']) . "</p>";

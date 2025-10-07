@@ -59,7 +59,7 @@
         useCORS: true,
         scale: 2,
         backgroundColor: getComputedStyle(document.documentElement)
-          .getPropertyValue("--background-fallback")
+          .getPropertyValue("--background-ss")
           .trim()
       }).then(canvas => {
         let link = document.createElement("a");

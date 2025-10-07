@@ -50,18 +50,48 @@
     $status_baca  = trim($_POST['status_baca']);
     $catatan      = trim($_POST['catatan']);
     $gambar       = $buku['gambar'];
+    $file_pdf       = $buku['file_pdf'];
 
     // Upload gambar
     if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
-      $target_dir = "uploads/";
+      $target_dir = "uploads/images/";
       if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
       }
       $ext = pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION);
       $nama_file = uniqid('buku_', true) . '.' . $ext;
       $gambar_baru = $target_dir . $nama_file;
-      move_uploaded_file($_FILES['gambar']['tmp_name'], $gambar_baru);
-      $gambar = $gambar_baru; // simpan path baru ke variabel utama
+      if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif']) && $_FILES['gambar']['size'] <= 2 * 1024 * 1024) {
+        if (!empty($gambar) && file_exists($gambar)) {
+          unlink($gambar); // Hapus gambar lama
+        }
+        move_uploaded_file($_FILES['gambar']['tmp_name'], $gambar_baru);
+        $gambar = $gambar_baru;
+      } else {
+        echo "<p class='alert error'>Gambar tidak valid atau terlalu besar!</p>";
+        exit;
+      }
+    }
+
+    // Upload file PDF
+    if (isset($_FILES['file_pdf']) && $_FILES['file_pdf']['error'] == 0) {
+      $target_dir_pdf = "uploads/pdf/";
+      if (!is_dir($target_dir_pdf)) {
+        mkdir($target_dir_pdf, 0777, true);
+      }
+      $ext = pathinfo($_FILES['file_pdf']['name'], PATHINFO_EXTENSION);
+      $nama_file_pdf = uniqid('pdf_', true) . '.' . $ext;
+      $file_pdf_baru = $target_dir_pdf . $nama_file_pdf;
+      if (strtolower($ext) == 'pdf' && $_FILES['file_pdf']['size'] <= 10 * 1024 * 1024) {
+        if (!empty($file_pdf) && file_exists($file_pdf)) {
+          unlink($file_pdf); // Hapus PDF lama
+        }
+        move_uploaded_file($_FILES['file_pdf']['tmp_name'], $file_pdf_baru);
+        $file_pdf = $file_pdf_baru;
+      } else {
+        echo "<p class='alert error'>File PDF tidak valid atau terlalu besar!</p>";
+        exit;
+      }
     }
 
     // update database
@@ -73,7 +103,8 @@
     kategori = '$kategori',
     status_baca = '$status_baca',
     catatan = '$catatan',
-    gambar = '$gambar'
+    gambar = '$gambar',
+    file_pdf = '$file_pdf'
     WHERE id = $id_buku AND user_id = $user_id");
 
     mysqli_query($conn, "INSERT INTO aktivitas (user_id, aksi, judul_buku) VALUES ('$user_id', 'edit', '$judul')");
@@ -103,7 +134,17 @@
 
       <label for="gambar">Sampul Buku</label>
       <input type="file" name="gambar" class="form_login" accept="image/*"><br>
+      <?php if (!empty($buku['gambar']) && file_exists($buku['gambar'])): ?>
+        <img src="<?= $buku['gambar'] ?>" alt="Sampul Buku" class="book-cover" style="max-width: 100px;"><br>
+      <?php endif; ?>
 
+      <label for="file_pdf">File PDF Buku</label>
+      <input type="file" name="file_pdf" class="form_login" accept=".pdf"><br>
+      <?php if (!empty($buku['file_pdf']) && file_exists($buku['file_pdf'])): ?>
+        <a href="<?= $buku['file_pdf'] ?>" target="_blank">Lihat PDF Saat Ini</a><br>
+      <?php endif; ?>
+
+      <small class="note">Perhatikan: ukuran file PDF maksimal 10MB</small><br>
       <label for="status_baca">Status Baca</label>
       <select name="status_baca" class="form_login" required>
         <option value="sudah_dibaca" <?= $buku['status_baca'] == 'sudah_dibaca' ? 'selected' : '' ?>>Sudah Dibaca</option>
